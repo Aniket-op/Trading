@@ -78,7 +78,7 @@ python -m quant_bot.feature_engine.engine
 
 - **Phase 1** ✅ — Data infrastructure (OHLCV, funding, OI, liquidations, orderbook + dashboard)
 - **Phase 2** ✅ — Feature engine (ATR, realized vol, Parkinson vol, volume profile POC/VAH/VAL, momentum, EMA slope, OB imbalance, CVD, Shannon/Permutation entropy)
-- **Phase 3** — Regime detection (HMM + Markov Switching)
+- **Phase 3** ✅ — Regime detection (HMM 4-state + Markov Switching validator → `regime_states` table)
 - **Phase 4** — Kalman trend filter
 - **Phase 5** — Bayesian probability engine
 - **Phase 6** — Alpha engine

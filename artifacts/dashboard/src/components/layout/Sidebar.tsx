@@ -2,6 +2,7 @@ import { Link, useLocation } from "wouter";
 import { 
   Activity, 
   BarChart2, 
+  Brain,
   CandlestickChart, 
   Database, 
   Layers, 
@@ -21,6 +22,7 @@ export function Sidebar() {
     { label: "Liquidations", href: "/liquidations", icon: TrendingDown },
     { label: "Orderbook", href: "/orderbook", icon: Layers },
     { label: "Features", href: "/features", icon: Zap },
+    { label: "Regime (P3)", href: "/regime", icon: Brain },
     { label: "Collectors", href: "/collector", icon: Database },
   ];
 
@@ -28,7 +30,7 @@ export function Sidebar() {
     <div className="w-64 border-r bg-card flex flex-col h-full font-mono text-sm">
       <div className="p-4 border-b">
         <h1 className="text-xl font-bold tracking-tight">QUANT_BOT<span className="text-primary">.OS</span></h1>
-        <div className="text-xs text-muted-foreground mt-1">v1.0.4 [LIVE]</div>
+        <div className="text-xs text-muted-foreground mt-1">v1.1.0 [LIVE] · Phase 3</div>
       </div>
       
       <nav className="flex-1 py-4 flex flex-col gap-1 px-2">

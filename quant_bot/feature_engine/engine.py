@@ -44,10 +44,14 @@ def fetch_ohlcv(conn, symbol: str, timeframe: str, limit: int) -> pd.DataFrame:
         cur.execute(
             """
             SELECT timestamp, open, high, low, close, volume
-            FROM ohlcv
-            WHERE symbol = %s AND timeframe = %s
+            FROM (
+                SELECT timestamp, open, high, low, close, volume
+                FROM ohlcv
+                WHERE symbol = %s AND timeframe = %s
+                ORDER BY timestamp DESC
+                LIMIT %s
+            ) sub
             ORDER BY timestamp ASC
-            LIMIT %s
             """,
             (symbol, timeframe, limit),
         )
@@ -197,11 +201,14 @@ def run_once(conn, symbol: str):
     row = {k: clean(v) if k not in ("symbol", "timestamp") else v for k, v in features.items()}
     upsert_features(conn, row)
 
+    def fmt(v, fmt_str=".4f"):
+        return format(v, fmt_str) if v is not None else "N/A"
+
     log.info(
-        f"Features stored: atr14={features['atr14']:.4f if features['atr14'] else 'N/A'} "
-        f"realizedVol={features['realized_vol_24h']:.4f if features['realized_vol_24h'] else 'N/A'} "
-        f"entropy={features['shannon_entropy']:.4f if features['shannon_entropy'] else 'N/A'} "
-        f"cvd={features['cvd']:.2f if features['cvd'] else 'N/A'}"
+        f"Features stored: atr14={fmt(features['atr14'])} "
+        f"realizedVol={fmt(features['realized_vol_24h'])} "
+        f"entropy={fmt(features['shannon_entropy'])} "
+        f"cvd={fmt(features['cvd'], '.2f')}"
     )
 
 

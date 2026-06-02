@@ -8,6 +8,7 @@ import orderbookRouter from "./orderbook";
 import featuresRouter from "./features";
 import collectorRouter from "./collector";
 import summaryRouter from "./summary";
+import regimeRouter from "./regime";
 
 const router: IRouter = Router();
 
@@ -20,5 +21,6 @@ router.use(orderbookRouter);
 router.use(featuresRouter);
 router.use(collectorRouter);
 router.use(summaryRouter);
+router.use(regimeRouter);
 
 export default router;

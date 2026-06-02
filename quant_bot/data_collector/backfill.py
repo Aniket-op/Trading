@@ -73,7 +73,9 @@ async def backfill_timeframe(exchange: ccxt.Exchange, conn, tf: str):
         try:
             candles = await exchange.fetch_ohlcv(SYMBOL, tf, since=since_ms, limit=BATCH_SIZE)
         except Exception as e:
+            import traceback
             log.error(f"Error fetching {tf}: {e}")
+            log.error(traceback.format_exc())
             await asyncio.sleep(5)
             continue
 

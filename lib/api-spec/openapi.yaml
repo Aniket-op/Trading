@@ -26,6 +26,8 @@ tags:
     description: Data collector status and control
   - name: summary
     description: Summary and overview endpoints
+  - name: regime
+    description: Phase 3 — HMM + Markov Switching regime detection
 
 paths:
   /healthz:
@@ -320,6 +322,48 @@ paths:
               schema:
                 $ref: "#/components/schemas/MarketSnapshot"
 
+  /regime/latest:
+    get:
+      operationId: getLatestRegime
+      tags: [regime]
+      summary: Get the most recent regime classification
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+      responses:
+        "200":
+          description: Latest regime state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegimeState"
+
+  /regime:
+    get:
+      operationId: listRegime
+      tags: [regime]
+      summary: List regime state history
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 100 }
+        - name: since
+          in: query
+          schema: { type: ["string", "null"] }
+      responses:
+        "200":
+          description: Regime state history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RegimeState"
+
 components:
   schemas:
     HealthStatus:
@@ -487,3 +531,24 @@ components:
         symbol: { type: string }
         generatedAt: { type: string }
         latest: { $ref: "#/components/schemas/FeatureRow" }
+
+    RegimeState:
+      type: object
+      required: [id, symbol, timestamp]
+      properties:
+        id: { type: integer }
+        symbol: { type: string }
+        timestamp: { type: string }
+        hmmBull: { type: ["number", "null"] }
+        hmmBear: { type: ["number", "null"] }
+        hmmSideways: { type: ["number", "null"] }
+        hmmPanic: { type: ["number", "null"] }
+        hmmState: { type: ["string", "null"] }
+        msRegime: { type: ["number", "null"] }
+        msProb0: { type: ["number", "null"] }
+        msProb1: { type: ["number", "null"] }
+        msIsHighVol: { type: ["boolean", "null"] }
+        modelsAgree: { type: ["boolean", "null"] }
+        regime: { type: ["string", "null"] }
+        regimeConfidence: { type: ["number", "null"] }
+        createdAt: { type: ["string", "null"] }

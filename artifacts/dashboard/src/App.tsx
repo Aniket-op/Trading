@@ -13,6 +13,7 @@ import LiquidationsPage from "@/pages/liquidations";
 import OrderbookPage from "@/pages/orderbook";
 import CollectorPage from "@/pages/collector";
 import FeaturesPage from "@/pages/features";
+import RegimePage from "@/pages/regime";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ function Router() {
         <Route path="/orderbook" component={OrderbookPage} />
         <Route path="/collector" component={CollectorPage} />
         <Route path="/features" component={FeaturesPage} />
+        <Route path="/regime" component={RegimePage} />
         <Route component={NotFound} />
       </Switch>
     </AppLayout>
