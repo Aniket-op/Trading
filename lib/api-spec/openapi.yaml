@@ -3,13 +3,28 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Quant Bot Data Infrastructure API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: ohlcv
+    description: OHLCV candlestick data
+  - name: funding
+    description: Funding rate data
+  - name: open_interest
+    description: Open interest data
+  - name: liquidations
+    description: Liquidation data
+  - name: orderbook
+    description: Order book snapshots
+  - name: collector
+    description: Data collector status and control
+  - name: summary
+    description: Summary and overview endpoints
+
 paths:
   /healthz:
     get:
@@ -24,6 +39,243 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /ohlcv:
+    get:
+      operationId: listOhlcv
+      tags: [ohlcv]
+      summary: List OHLCV candles
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+        - name: timeframe
+          in: query
+          schema: { type: string, enum: ["1m", "5m", "15m", "1h"], default: "1h" }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 100 }
+        - name: since
+          in: query
+          schema: { type: ["string", "null"] }
+      responses:
+        "200":
+          description: List of OHLCV candles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Ohlcv"
+
+  /ohlcv/latest:
+    get:
+      operationId: getLatestOhlcv
+      tags: [ohlcv]
+      summary: Get latest candle per timeframe
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+      responses:
+        "200":
+          description: Latest candle for each timeframe
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LatestOhlcvSummary"
+
+  /funding:
+    get:
+      operationId: listFunding
+      tags: [funding]
+      summary: List funding rate records
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 100 }
+        - name: since
+          in: query
+          schema: { type: ["string", "null"] }
+      responses:
+        "200":
+          description: List of funding rate records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FundingRate"
+
+  /funding/latest:
+    get:
+      operationId: getLatestFunding
+      tags: [funding]
+      summary: Get the most recent funding rate
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+      responses:
+        "200":
+          description: Latest funding rate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FundingRate"
+
+  /open-interest:
+    get:
+      operationId: listOpenInterest
+      tags: [open_interest]
+      summary: List open interest records
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 100 }
+        - name: since
+          in: query
+          schema: { type: ["string", "null"] }
+      responses:
+        "200":
+          description: List of open interest records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OpenInterest"
+
+  /open-interest/latest:
+    get:
+      operationId: getLatestOpenInterest
+      tags: [open_interest]
+      summary: Get the most recent open interest
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+      responses:
+        "200":
+          description: Latest open interest
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenInterest"
+
+  /liquidations:
+    get:
+      operationId: listLiquidations
+      tags: [liquidations]
+      summary: List liquidation events
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 100 }
+        - name: since
+          in: query
+          schema: { type: ["string", "null"] }
+      responses:
+        "200":
+          description: List of liquidation events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Liquidation"
+
+  /orderbook:
+    get:
+      operationId: listOrderbook
+      tags: [orderbook]
+      summary: List order book snapshots
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20 }
+      responses:
+        "200":
+          description: List of order book snapshots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrderbookSnapshot"
+
+  /orderbook/latest:
+    get:
+      operationId: getLatestOrderbook
+      tags: [orderbook]
+      summary: Get most recent order book snapshot
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+      responses:
+        "200":
+          description: Latest order book snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderbookSnapshot"
+
+  /collector/status:
+    get:
+      operationId: getCollectorStatus
+      tags: [collector]
+      summary: Get data collector status
+      responses:
+        "200":
+          description: Collector status for each data type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CollectorStatus"
+
+  /summary/overview:
+    get:
+      operationId: getSummaryOverview
+      tags: [summary]
+      summary: Get dashboard overview — record counts, latest timestamps, data freshness
+      responses:
+        "200":
+          description: Overview summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OverviewSummary"
+
+  /summary/market-snapshot:
+    get:
+      operationId: getMarketSnapshot
+      tags: [summary]
+      summary: Current market snapshot — price, funding, OI, liquidations in one call
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+      responses:
+        "200":
+          description: Market snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketSnapshot"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +286,129 @@ components:
       required:
         - status
 
+    Ohlcv:
+      type: object
+      required: [id, symbol, timeframe, timestamp, open, high, low, close, volume]
+      properties:
+        id: { type: integer }
+        symbol: { type: string }
+        timeframe: { type: string }
+        timestamp: { type: string }
+        open: { type: number }
+        high: { type: number }
+        low: { type: number }
+        close: { type: number }
+        volume: { type: number }
+
+    LatestOhlcvSummary:
+      type: object
+      required: [symbol]
+      properties:
+        symbol: { type: string }
+        "1m": { $ref: "#/components/schemas/Ohlcv" }
+        "5m": { $ref: "#/components/schemas/Ohlcv" }
+        "15m": { $ref: "#/components/schemas/Ohlcv" }
+        "1h": { $ref: "#/components/schemas/Ohlcv" }
+
+    FundingRate:
+      type: object
+      required: [id, symbol, timestamp, fundingRate]
+      properties:
+        id: { type: integer }
+        symbol: { type: string }
+        timestamp: { type: string }
+        fundingRate: { type: number }
+        nextFundingTime: { type: ["string", "null"] }
+
+    OpenInterest:
+      type: object
+      required: [id, symbol, timestamp, openInterest, openInterestValue]
+      properties:
+        id: { type: integer }
+        symbol: { type: string }
+        timestamp: { type: string }
+        openInterest: { type: number }
+        openInterestValue: { type: number }
+
+    Liquidation:
+      type: object
+      required: [id, symbol, timestamp, side, price, quantity, value]
+      properties:
+        id: { type: integer }
+        symbol: { type: string }
+        timestamp: { type: string }
+        side: { type: string }
+        price: { type: number }
+        quantity: { type: number }
+        value: { type: number }
+
+    OrderbookSnapshot:
+      type: object
+      required: [id, symbol, timestamp, bids, asks, bidAskRatio, midPrice]
+      properties:
+        id: { type: integer }
+        symbol: { type: string }
+        timestamp: { type: string }
+        bids: { type: string }
+        asks: { type: string }
+        bidAskRatio: { type: number }
+        midPrice: { type: number }
+        spread: { type: ["number", "null"] }
+
+    CollectorStatusItem:
+      type: object
+      required: [name, lastRun, recordCount, status, latestTimestamp]
+      properties:
+        name: { type: string }
+        lastRun: { type: ["string", "null"] }
+        recordCount: { type: integer }
+        status: { type: string }
+        latestTimestamp: { type: ["string", "null"] }
+        errorMessage: { type: ["string", "null"] }
+
+    CollectorStatus:
+      type: object
+      required: [collectors, updatedAt]
+      properties:
+        updatedAt: { type: string }
+        collectors:
+          type: array
+          items:
+            $ref: "#/components/schemas/CollectorStatusItem"
+
+    TableSummary:
+      type: object
+      required: [table, recordCount, latestTimestamp, oldestTimestamp]
+      properties:
+        table: { type: string }
+        recordCount: { type: integer }
+        latestTimestamp: { type: ["string", "null"] }
+        oldestTimestamp: { type: ["string", "null"] }
+        dataAgeMinutes: { type: ["number", "null"] }
+
+    OverviewSummary:
+      type: object
+      required: [tables, totalRecords, generatedAt]
+      properties:
+        generatedAt: { type: string }
+        totalRecords: { type: integer }
+        tables:
+          type: array
+          items:
+            $ref: "#/components/schemas/TableSummary"
+
+    MarketSnapshot:
+      type: object
+      required: [symbol, generatedAt]
+      properties:
+        symbol: { type: string }
+        generatedAt: { type: string }
+        currentPrice: { type: ["number", "null"] }
+        priceChange1h: { type: ["number", "null"] }
+        fundingRate: { type: ["number", "null"] }
+        openInterest: { type: ["number", "null"] }
+        openInterestValue: { type: ["number", "null"] }
+        liquidations1h: { type: ["number", "null"] }
+        liquidationsValue1h: { type: ["number", "null"] }
+        bidAskRatio: { type: ["number", "null"] }
+        volume1h: { type: ["number", "null"] }
