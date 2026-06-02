@@ -17,7 +17,10 @@ import type {
 
 import type {
   CollectorStatus,
+  FeatureLatest,
+  FeatureRow,
   FundingRate,
+  GetLatestFeaturesParams,
   GetLatestFundingParams,
   GetLatestOhlcvParams,
   GetLatestOpenInterestParams,
@@ -26,6 +29,7 @@ import type {
   HealthStatus,
   LatestOhlcvSummary,
   Liquidation,
+  ListFeaturesParams,
   ListFundingParams,
   ListLiquidationsParams,
   ListOhlcvParams,
@@ -872,6 +876,174 @@ export function useGetLatestOrderbook<TData = Awaited<ReturnType<typeof getLates
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetLatestOrderbookQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListFeaturesUrl = (params?: ListFeaturesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/features?${stringifiedParams}` : `/api/features`
+}
+
+/**
+ * @summary List feature store rows
+ */
+export const listFeatures = async (params?: ListFeaturesParams, options?: RequestInit): Promise<FeatureRow[]> => {
+
+  return customFetch<FeatureRow[]>(getListFeaturesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListFeaturesQueryKey = (params?: ListFeaturesParams,) => {
+    return [
+    `/api/features`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListFeaturesQueryOptions = <TData = Awaited<ReturnType<typeof listFeatures>>, TError = ErrorType<unknown>>(params?: ListFeaturesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFeatures>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListFeaturesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listFeatures>>> = ({ signal }) => listFeatures(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listFeatures>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListFeaturesQueryResult = NonNullable<Awaited<ReturnType<typeof listFeatures>>>
+export type ListFeaturesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List feature store rows
+ */
+
+export function useListFeatures<TData = Awaited<ReturnType<typeof listFeatures>>, TError = ErrorType<unknown>>(
+ params?: ListFeaturesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFeatures>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListFeaturesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetLatestFeaturesUrl = (params?: GetLatestFeaturesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/features/latest?${stringifiedParams}` : `/api/features/latest`
+}
+
+/**
+ * @summary Get the most recent computed feature row
+ */
+export const getLatestFeatures = async (params?: GetLatestFeaturesParams, options?: RequestInit): Promise<FeatureLatest> => {
+
+  return customFetch<FeatureLatest>(getGetLatestFeaturesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetLatestFeaturesQueryKey = (params?: GetLatestFeaturesParams,) => {
+    return [
+    `/api/features/latest`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetLatestFeaturesQueryOptions = <TData = Awaited<ReturnType<typeof getLatestFeatures>>, TError = ErrorType<unknown>>(params?: GetLatestFeaturesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getLatestFeatures>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetLatestFeaturesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLatestFeatures>>> = ({ signal }) => getLatestFeatures(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getLatestFeatures>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetLatestFeaturesQueryResult = NonNullable<Awaited<ReturnType<typeof getLatestFeatures>>>
+export type GetLatestFeaturesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get the most recent computed feature row
+ */
+
+export function useGetLatestFeatures<TData = Awaited<ReturnType<typeof getLatestFeatures>>, TError = ErrorType<unknown>>(
+ params?: GetLatestFeaturesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getLatestFeatures>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetLatestFeaturesQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

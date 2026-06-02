@@ -5,6 +5,7 @@ import fundingRouter from "./funding";
 import openInterestRouter from "./openInterest";
 import liquidationsRouter from "./liquidations";
 import orderbookRouter from "./orderbook";
+import featuresRouter from "./features";
 import collectorRouter from "./collector";
 import summaryRouter from "./summary";
 
@@ -16,6 +17,7 @@ router.use(fundingRouter);
 router.use(openInterestRouter);
 router.use(liquidationsRouter);
 router.use(orderbookRouter);
+router.use(featuresRouter);
 router.use(collectorRouter);
 router.use(summaryRouter);
 

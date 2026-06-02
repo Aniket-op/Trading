@@ -20,6 +20,8 @@ tags:
     description: Liquidation data
   - name: orderbook
     description: Order book snapshots
+  - name: features
+    description: Feature store — computed signals from raw data
   - name: collector
     description: Data collector status and control
   - name: summary
@@ -233,6 +235,48 @@ paths:
               schema:
                 $ref: "#/components/schemas/OrderbookSnapshot"
 
+  /features:
+    get:
+      operationId: listFeatures
+      tags: [features]
+      summary: List feature store rows
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 100 }
+        - name: since
+          in: query
+          schema: { type: ["string", "null"] }
+      responses:
+        "200":
+          description: Feature rows
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FeatureRow"
+
+  /features/latest:
+    get:
+      operationId: getLatestFeatures
+      tags: [features]
+      summary: Get the most recent computed feature row
+      parameters:
+        - name: symbol
+          in: query
+          schema: { type: string, default: "BTC/USDT" }
+      responses:
+        "200":
+          description: Latest feature row with metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeatureLatest"
+
   /collector/status:
     get:
       operationId: getCollectorStatus
@@ -412,3 +456,34 @@ components:
         liquidationsValue1h: { type: ["number", "null"] }
         bidAskRatio: { type: ["number", "null"] }
         volume1h: { type: ["number", "null"] }
+
+    FeatureRow:
+      type: object
+      required: [id, symbol, timestamp]
+      properties:
+        id: { type: integer }
+        symbol: { type: string }
+        timestamp: { type: string }
+        atr14: { type: ["number", "null"] }
+        realizedVol24h: { type: ["number", "null"] }
+        parkinsonVol24h: { type: ["number", "null"] }
+        returns1h: { type: ["number", "null"] }
+        returns24h: { type: ["number", "null"] }
+        momentum14: { type: ["number", "null"] }
+        emaSlope20: { type: ["number", "null"] }
+        poc: { type: ["number", "null"] }
+        vah: { type: ["number", "null"] }
+        val: { type: ["number", "null"] }
+        orderbookImbalance: { type: ["number", "null"] }
+        bidAskRatio: { type: ["number", "null"] }
+        cvd: { type: ["number", "null"] }
+        shannonEntropy: { type: ["number", "null"] }
+        permutationEntropy: { type: ["number", "null"] }
+
+    FeatureLatest:
+      type: object
+      required: [symbol, generatedAt]
+      properties:
+        symbol: { type: string }
+        generatedAt: { type: string }
+        latest: { $ref: "#/components/schemas/FeatureRow" }

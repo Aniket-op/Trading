@@ -6,7 +6,8 @@ import {
   Database, 
   Layers, 
   PieChart, 
-  TrendingDown
+  TrendingDown,
+  Zap
 } from "lucide-react";
 
 export function Sidebar() {
@@ -19,6 +20,7 @@ export function Sidebar() {
     { label: "Open Interest", href: "/open-interest", icon: BarChart2 },
     { label: "Liquidations", href: "/liquidations", icon: TrendingDown },
     { label: "Orderbook", href: "/orderbook", icon: Layers },
+    { label: "Features", href: "/features", icon: Zap },
     { label: "Collectors", href: "/collector", icon: Database },
   ];
 

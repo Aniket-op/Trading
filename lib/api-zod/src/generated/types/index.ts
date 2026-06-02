@@ -8,7 +8,10 @@
 
 export * from './collectorStatus';
 export * from './collectorStatusItem';
+export * from './featureLatest';
+export * from './featureRow';
 export * from './fundingRate';
+export * from './getLatestFeaturesParams';
 export * from './getLatestFundingParams';
 export * from './getLatestOhlcvParams';
 export * from './getLatestOpenInterestParams';
@@ -17,6 +20,7 @@ export * from './getMarketSnapshotParams';
 export * from './healthStatus';
 export * from './latestOhlcvSummary';
 export * from './liquidation';
+export * from './listFeaturesParams';
 export * from './listFundingParams';
 export * from './listLiquidationsParams';
 export * from './listOhlcvParams';

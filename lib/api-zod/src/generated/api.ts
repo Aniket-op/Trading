@@ -253,6 +253,76 @@ export const GetLatestOrderbookResponse = zod.object({
 
 
 /**
+ * @summary List feature store rows
+ */
+export const listFeaturesQuerySymbolDefault = `BTC/USDT`;
+export const listFeaturesQueryLimitDefault = 100;
+
+export const ListFeaturesQueryParams = zod.object({
+  "symbol": zod.coerce.string().default(listFeaturesQuerySymbolDefault),
+  "limit": zod.coerce.number().default(listFeaturesQueryLimitDefault),
+  "since": zod.coerce.string().nullish()
+})
+
+export const ListFeaturesResponseItem = zod.object({
+  "id": zod.number(),
+  "symbol": zod.string(),
+  "timestamp": zod.string(),
+  "atr14": zod.number().nullish(),
+  "realizedVol24h": zod.number().nullish(),
+  "parkinsonVol24h": zod.number().nullish(),
+  "returns1h": zod.number().nullish(),
+  "returns24h": zod.number().nullish(),
+  "momentum14": zod.number().nullish(),
+  "emaSlope20": zod.number().nullish(),
+  "poc": zod.number().nullish(),
+  "vah": zod.number().nullish(),
+  "val": zod.number().nullish(),
+  "orderbookImbalance": zod.number().nullish(),
+  "bidAskRatio": zod.number().nullish(),
+  "cvd": zod.number().nullish(),
+  "shannonEntropy": zod.number().nullish(),
+  "permutationEntropy": zod.number().nullish()
+})
+export const ListFeaturesResponse = zod.array(ListFeaturesResponseItem)
+
+
+/**
+ * @summary Get the most recent computed feature row
+ */
+export const getLatestFeaturesQuerySymbolDefault = `BTC/USDT`;
+
+export const GetLatestFeaturesQueryParams = zod.object({
+  "symbol": zod.coerce.string().default(getLatestFeaturesQuerySymbolDefault)
+})
+
+export const GetLatestFeaturesResponse = zod.object({
+  "symbol": zod.string(),
+  "generatedAt": zod.string(),
+  "latest": zod.object({
+  "id": zod.number(),
+  "symbol": zod.string(),
+  "timestamp": zod.string(),
+  "atr14": zod.number().nullish(),
+  "realizedVol24h": zod.number().nullish(),
+  "parkinsonVol24h": zod.number().nullish(),
+  "returns1h": zod.number().nullish(),
+  "returns24h": zod.number().nullish(),
+  "momentum14": zod.number().nullish(),
+  "emaSlope20": zod.number().nullish(),
+  "poc": zod.number().nullish(),
+  "vah": zod.number().nullish(),
+  "val": zod.number().nullish(),
+  "orderbookImbalance": zod.number().nullish(),
+  "bidAskRatio": zod.number().nullish(),
+  "cvd": zod.number().nullish(),
+  "shannonEntropy": zod.number().nullish(),
+  "permutationEntropy": zod.number().nullish()
+}).optional()
+})
+
+
+/**
  * @summary Get data collector status
  */
 export const GetCollectorStatusResponse = zod.object({

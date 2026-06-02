@@ -125,6 +125,48 @@ export interface MarketSnapshot {
   volume1h?: number | null;
 }
 
+export interface FeatureRow {
+  id: number;
+  symbol: string;
+  timestamp: string;
+  /** @nullable */
+  atr14?: number | null;
+  /** @nullable */
+  realizedVol24h?: number | null;
+  /** @nullable */
+  parkinsonVol24h?: number | null;
+  /** @nullable */
+  returns1h?: number | null;
+  /** @nullable */
+  returns24h?: number | null;
+  /** @nullable */
+  momentum14?: number | null;
+  /** @nullable */
+  emaSlope20?: number | null;
+  /** @nullable */
+  poc?: number | null;
+  /** @nullable */
+  vah?: number | null;
+  /** @nullable */
+  val?: number | null;
+  /** @nullable */
+  orderbookImbalance?: number | null;
+  /** @nullable */
+  bidAskRatio?: number | null;
+  /** @nullable */
+  cvd?: number | null;
+  /** @nullable */
+  shannonEntropy?: number | null;
+  /** @nullable */
+  permutationEntropy?: number | null;
+}
+
+export interface FeatureLatest {
+  symbol: string;
+  generatedAt: string;
+  latest?: FeatureRow;
+}
+
 export type ListOhlcvParams = {
 symbol?: string;
 timeframe?: ListOhlcvTimeframe;
@@ -190,6 +232,19 @@ limit?: number;
 };
 
 export type GetLatestOrderbookParams = {
+symbol?: string;
+};
+
+export type ListFeaturesParams = {
+symbol?: string;
+limit?: number;
+/**
+ * @nullable
+ */
+since?: string | null;
+};
+
+export type GetLatestFeaturesParams = {
 symbol?: string;
 };
 

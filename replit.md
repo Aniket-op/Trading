@@ -14,14 +14,20 @@ A crypto quantitative trading data pipeline with a real-time monitoring dashboar
 ### Python Data Collector
 
 ```bash
-cd quant_bot
-pip install -r requirements.txt
+pip install -r quant_bot/requirements.txt
 
 # One-time backfill (6 months of historical OHLCV):
 python -m quant_bot.data_collector.backfill
 
 # Live collector (runs every 60 seconds):
 python -m quant_bot.data_collector.collector
+```
+
+### Python Feature Engine
+
+```bash
+# Compute all features every 60 seconds (run alongside collector):
+python -m quant_bot.feature_engine.engine
 ```
 
 ## Stack
@@ -44,6 +50,13 @@ python -m quant_bot.data_collector.collector
 - `quant_bot/data_collector/` — Python CCXT collectors
   - `collector.py` — live collection loop (runs every 60s)
   - `backfill.py` — 6-month historical backfill
+- `quant_bot/feature_engine/` — Phase 2 feature computation
+  - `engine.py` — main loop, runs every 60s, stores to feature_store
+  - `volatility.py` — ATR, Realized Vol, Parkinson Vol
+  - `market_structure.py` — Volume Profile (POC, VAH, VAL)
+  - `trend.py` — Returns, Momentum, EMA Slope
+  - `microstructure.py` — Orderbook Imbalance, Bid/Ask Ratio, CVD
+  - `entropy.py` — Shannon Entropy, Permutation Entropy
 
 ## Architecture decisions
 
@@ -64,7 +77,7 @@ python -m quant_bot.data_collector.collector
 ## Phase Roadmap
 
 - **Phase 1** ✅ — Data infrastructure (OHLCV, funding, OI, liquidations, orderbook + dashboard)
-- **Phase 2** — Feature engine (ATR, realized vol, volume profile, orderbook imbalance, CVD, entropy)
+- **Phase 2** ✅ — Feature engine (ATR, realized vol, Parkinson vol, volume profile POC/VAH/VAL, momentum, EMA slope, OB imbalance, CVD, Shannon/Permutation entropy)
 - **Phase 3** — Regime detection (HMM + Markov Switching)
 - **Phase 4** — Kalman trend filter
 - **Phase 5** — Bayesian probability engine

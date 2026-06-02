@@ -12,6 +12,7 @@ import OpenInterestPage from "@/pages/open-interest";
 import LiquidationsPage from "@/pages/liquidations";
 import OrderbookPage from "@/pages/orderbook";
 import CollectorPage from "@/pages/collector";
+import FeaturesPage from "@/pages/features";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ function Router() {
         <Route path="/liquidations" component={LiquidationsPage} />
         <Route path="/orderbook" component={OrderbookPage} />
         <Route path="/collector" component={CollectorPage} />
+        <Route path="/features" component={FeaturesPage} />
         <Route component={NotFound} />
       </Switch>
     </AppLayout>
